@@ -1,0 +1,13 @@
+1. The problem that I solved was the Search problem. I created a minimax algortihm to play Tic-Tac-Toe against.
+
+2. I implemented the minimax pseudo-code provided in the textbook with the minimax, max_helper, and min_helper fucntions.
+   I tested my system by running the program.
+
+3. When I first ran my program it didn't always pick the best move because I accidentally left my "return v", which represented
+   the best value, under the for loop leaving v as not the best move most of the time. Once I fixed that the program started to 
+   play the best moves the best case senario for me was a tie game.
+
+4. My methods and choices were appropriate for part of the task. Minimax is very good at Tic-Tac_Toe but because it looks at all
+   possibilities it takes way too long to play connect four because there are much more possible game states for the program to go
+   through. Next time if I had more time I would implement alpha beta pruning and alpha beta cutoff so I could run connect four on it.
+   I don't believe that there are ethical implications of my system.

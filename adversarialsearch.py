@@ -2,12 +2,12 @@ from typing import Callable
 
 from adversarialsearchproblem import (
     Action,
-    AdversarialSearchProblem,
-    State as GameState,
+    AdversarialSearchProblem as asp,
+    GameState as State,
 )
 
 
-def minimax(asp: AdversarialSearchProblem[GameState, Action]) -> Action:
+def minimax(asp: asp[State, Action]) -> Action:
     """
     Implement the minimax algorithm on ASPs, assuming that the given game is
     both 2-player and constant-sum.
@@ -17,10 +17,43 @@ def minimax(asp: AdversarialSearchProblem[GameState, Action]) -> Action:
     Output:
         an action (an element of asp.get_available_actions(asp.get_start_state()))
     """
+    state = asp.get_start_state() # state is equal to an instance of GameState()
+    player = state.player_to_move()
+    bestVal = float("-inf")
+    bestMove = None 
+    for a in asp.get_available_actions(state):
+        next_state = asp.transition(state, a)
+        val = min_helper(asp, next_state, player)
+        if val > bestVal:
+            bestVal = val
+            bestMove = a
+    return bestMove
+    
     ...
 
+def max_helper(asp, state, player):
+    if asp.is_terminal_state(state):
+        e = asp.evaluate_terminal(state)
+        return e[player]
+    else:
+        v = float("-inf")
+        for a in asp.get_available_actions(state):
+            next_state = asp.transition(state, a)
+            v = max(v, min_helper(asp, next_state, player))
+        return v
 
-def alpha_beta(asp: AdversarialSearchProblem[GameState, Action]) -> Action:
+def min_helper(asp, state, player):
+    if asp.is_terminal_state(state):
+        e = asp.evaluate_terminal(state)
+        return e[player]
+    else:
+        v = float("inf")
+        for a in asp.get_available_actions(state):
+            next_state = asp.transition(state, a)
+            v = min(v, max_helper(asp, next_state, player))
+        return v 
+
+def alpha_beta(asp: asp[State, Action]) -> Action:
     """
     Implement the alpha-beta pruning algorithm on ASPs,
     assuming that the given game is both 2-player and constant-sum.
@@ -34,10 +67,10 @@ def alpha_beta(asp: AdversarialSearchProblem[GameState, Action]) -> Action:
 
 
 def alpha_beta_cutoff(
-    asp: AdversarialSearchProblem[GameState, Action],
+    asp: asp[State, Action],
     cutoff_ply: int,
     # See AdversarialSearchProblem:heuristic_func
-    heuristic_func: Callable[[GameState], float],
+    heuristic_func: Callable[[State], float],
 ) -> Action:
     """
     This function should:
